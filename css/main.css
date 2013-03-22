@@ -1,0 +1,10 @@
+header { 
+    background: #1b1b1b; 
+    -webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1); 
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 40px;
+}
+
+header h2 { 
+    color: #AAAAAA;
+}
