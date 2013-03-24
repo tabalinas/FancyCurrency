@@ -16,19 +16,23 @@
         </header>
 
         <div class="container" ng-controller="app.ctrls.CurrencyListCtrl">
-            <form class="well form-inline">
-                <input type="text" class="input-small" ng-model="value" placeholder="Enter Value">
-                <select>
-                    <option ng-repeat="currency in currencies" value="{{currency.ticker}}">
-                        {{currency.name}} ({{currency.ticker}})
-                    </option>
-                </select>
-                <button class="btn-primary btn">Convert</button>
-            </form>
+            <div class="row">
+                <div class="span12">
+                    <form class="well form-inline">
+                        <input type="text" class="input-small" ng-model="value" placeholder="Enter Value">
+                        <select ng-model="currency">
+                            <option ng-repeat="currency in currencies" value="{{currency.ticker}}">
+                                {{currency.name}} ({{currency.ticker}})
+                            </option>
+                        </select>
+                        <button class="btn-primary btn" ng-click="convert()">Convert</button>
+                    </form>
+                </div>
+            </div>
 
             <div class="row">
                 <div class="span6">
-                    <table class="table table-hover table-striped">
+                    <table class="currency-table table table-hover table-striped">
                         <tr>
                             <th>Currency</th>
                             <th>Ticker</th>
@@ -38,12 +42,17 @@
                         <tr ng-repeat="currency in currencies">
                             <td>{{currency.name}}</td>
                             <td>{{currency.ticker}}</td>
-                            <td>{{currency.price}}</td>
-                            <td>{{currency.value}}</td>
+                            <td>{{currency.price.toFixed(2)}}</td>
+                            <td>{{currency.value.toFixed(2)}}</td>
                         </tr>
                     </table>
                 </div>
+                <div class="span6">
+                    
+                </div>
             </div>
+
+
         </div>
 
         <hr>

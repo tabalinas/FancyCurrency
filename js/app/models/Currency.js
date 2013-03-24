@@ -1,12 +1,12 @@
 ﻿(function(app) {
     
-    app.models.Currency = function(config) {
-        this.name = "";
-        this.ticker = "";
-        this.price = 0;
-        this.value = 0;
-
-        angular.extend(this, config);
+    app.models.Currency = function(attrs) {
+        angular.extend(this, {
+            name: "",
+            ticker: "",
+            price: 0,
+            value: 0,
+        }, attrs);
     };
 
 })(app);

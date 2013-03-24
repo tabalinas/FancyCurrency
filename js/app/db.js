@@ -22,7 +22,6 @@
             new app.models.Currency({ name: "Turkish Lira", ticker: "TRY" }),
             new app.models.Currency({ name: "Singapore Dollar", ticker: "SGD" }),
             new app.models.Currency({ name: "Brazilian Real", ticker: "BRL" }),
-            new app.models.Currency({ name: "Special Drawing Rights (SZR)", ticker: "XDR" }),
             new app.models.Currency({ name: "Mexican Peso", ticker: "MXN" })
         ]
     };
