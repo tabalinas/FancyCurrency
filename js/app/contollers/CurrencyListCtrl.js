@@ -3,6 +3,8 @@
     var CONVERT_SERVICE_URL = "http://rate-exchange.appspot.com/currency";
 
     app.ctrls.CurrencyListCtrl = function($scope, $http) {
+        var chart;
+
         $scope.currencies = app.db.Currencies;
 
         $scope.convert = function() {
@@ -12,6 +14,12 @@
                 promises = [];
 
             angular.forEach(self.currencies, function(currency) {
+                if(currency.ticker === currencyTicker) {
+                    currency.price = 1;
+                    currency.value = parseFloat(valueToConvert);
+                    return;
+                }
+
                 var promise = $.ajax({
                     type: "GET",
                     url: CONVERT_SERVICE_URL,
@@ -31,63 +39,64 @@
 
             $.when.apply(null, promises).done(function() {
                 self.$apply();
-                self.renderChart()
+                self.setChartData()
             });
         };
 
-        $scope.renderChart = function() {
-            var series = [];
+        $scope.setChartData = function() {
+            var currencyTickers = [],
+                values = [];
 
             angular.forEach(this.currencies, function(currency) {
-                series.push({
-                    name: currency.ticker,
-                    data: [currency.value]
-                });
+                currencyTickers.push(currency.ticker);
+                values.push(currency.value);
             });
 
-            $('#chart').highcharts({
-                chart: {
-                    type: 'bar'
-                },
-                series: series,
+            chart.xAxis[0].setCategories(currencyTickers);
+            chart.series[0].setData(values);
+        };
+
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: "chart",
+                type: "bar"
+            },
+            series: [{
+                name: "Value",
+                data: []
+            }],
+            title: {
+                text: "Value in different currencies"
+            },
+            xAxis: {
                 title: {
-                    text: 'Value in different currencies'
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: null
                 },
-                xAxis: {
-                    title: {
-                        text: null
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: null
-                    },
-                    labels: {
-                        overflow: 'justify'
-                    }
-                },
-                tooltip: {
-                    formatter: function() {
-                        return "<b>" + this.series.name + "</b>: " + this.y.toFixed(2);
-                    }
-                },
-                legend: {
-                    enabled: false
-                },
-                plotOptions: {
-                    bar: {
-                        dataLabels: {
-                            enabled: true,
-                            formatter: function() {
-                                return this.y.toFixed(2);
-                            }
+                labels: {
+                    overflow: "justify"
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true,
+                        formatter: function() {
+                            return this.y.toFixed(2);
                         }
                     }
-                },
-                credits: { enabled: false }
-            });
-        };
+                }
+            },
+            credits: { enabled: false }
+        });  
     };
 
 })(app);
