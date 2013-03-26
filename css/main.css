@@ -13,6 +13,10 @@ header h2 {
     height: 844px;
 }
 
+.currency-table th { 
+    cursor: pointer;
+}
+
 .currency-table.table-striped tr > th.sorted { 
     background: #cee3f3;
 }
