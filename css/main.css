@@ -12,3 +12,7 @@ header h2 {
 #chart {
     height: 844px;
 }
+
+.currency-table.table-striped tr > th.sorted { 
+    background: #cee3f3;
+}

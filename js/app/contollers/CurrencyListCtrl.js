@@ -56,6 +56,52 @@
             chart.series[0].setData(values);
         };
 
+
+        $scope.columns = [
+            {
+                field: "name",
+                title: "Currency"
+            },
+            {
+                field: "ticker",
+                title: "Ticker"
+            },
+            {
+                field: "rate",
+                title: "Rate"
+            },
+            {
+                field: "value",
+                title: "Converted"
+            }
+        ];
+
+        $scope.sorting = {
+            field: "name",
+            asc: true
+        };
+
+        $scope.columnClass = function(field) {
+            return this.sorting.field === field ? "sorted" : "";
+        };
+
+        $scope.columnSortingPrefix = function(field) {
+            if(this.sorting.field === field) {
+                return this.sorting.asc ? "↑" : "↓";
+            }
+        };
+
+        $scope.setSorting = function(field) {
+            var sorting = this.sorting;
+            if(sorting.field === field) {
+                sorting.asc = !sorting.asc;
+            } else {
+                sorting.field = field;
+                sorting.asc = true;
+            }
+        };
+
+
         chart = new Highcharts.Chart({
             chart: {
                 renderTo: "chart",
@@ -96,7 +142,7 @@
                 }
             },
             credits: { enabled: false }
-        });  
+        });
     };
 
 })(app);

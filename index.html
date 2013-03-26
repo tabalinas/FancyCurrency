@@ -34,12 +34,11 @@
                 <div class="span5">
                     <table class="currency-table table table-striped">
                         <tr>
-                            <th>Currency</th>
-                            <th>Ticker</th>
-                            <th>Rate</th>
-                            <th>Converted</th>
+                            <th ng-repeat="column in columns" ng-class="columnClass(column.field)" ng-click="setSorting(column.field)">
+                                {{ columnSortingPrefix(column.field) }} {{column.title}}
+                            </th>
                         </tr>
-                        <tr ng-repeat="currency in currencies">
+                        <tr ng-repeat="currency in currencies | orderBy : sorting.field : !sorting.asc">
                             <td>{{currency.name}}</td>
                             <td>{{currency.ticker}}</td>
                             <td>{{currency.formattedRate()}}</td>
