@@ -8,3 +8,7 @@ header {
 header h2 { 
     color: #AAAAAA;
 }
+
+#chart {
+    height: 844px;
+}

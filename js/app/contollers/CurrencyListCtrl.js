@@ -15,7 +15,7 @@
 
             angular.forEach(self.currencies, function(currency) {
                 if(currency.ticker === currencyTicker) {
-                    currency.price = 1;
+                    currency.rate = 1;
                     currency.value = parseFloat(valueToConvert);
                     return;
                 }
@@ -30,7 +30,7 @@
                         q: valueToConvert
                     }
                 }).done(function(data) {
-                    currency.price = data.rate;
+                    currency.rate = data.rate;
                     currency.value = data.v;
                 });
 
