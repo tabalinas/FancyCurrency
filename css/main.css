@@ -20,3 +20,14 @@ header h2 {
 .currency-table.table-striped tr > th.sorted { 
     background: #cee3f3;
 }
+
+.alert-info { 
+    float:right;
+}
+
+.loader { 
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    background-image: url(ajax-loader.gif);
+}

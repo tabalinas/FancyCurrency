@@ -1,17 +1,21 @@
 ﻿(function(app) {
 
-    var CONVERT_SERVICE_URL = "http://rate-exchange.appspot.com/currency";
+    var CONVERT_SERVICE_URL = "https://rate-exchange.appspot.com/currency";
 
     app.ctrls.CurrencyListCtrl = function($scope, $http) {
         var chart;
 
         $scope.currencies = app.db.Currencies;
 
+        $scope.loading = false;
+
         $scope.convert = function() {
             var self = this,
                 valueToConvert = self.value,
                 currencyTicker = self.currency,
                 promises = [];
+
+            self.loading = true;
 
             angular.forEach(self.currencies, function(currency) {
                 if(currency.ticker === currencyTicker) {
@@ -38,8 +42,9 @@
             });
 
             $.when.apply(null, promises).done(function() {
+                self.loading = false;
+                self.setChartData();
                 self.$apply();
-                self.setChartData()
             });
         };
 

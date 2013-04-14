@@ -18,14 +18,16 @@
         <div class="container" ng-controller="app.ctrls.CurrencyListCtrl">
             <div class="row">
                 <div class="span12">
-                    <form class="well form-inline">
-                        <input type="text" class="input-small" ng-model="value" placeholder="Enter Value">
-                        <select ng-model="currency">
+                    <form name="converting" class="well form-inline">
+                        <input type="number" class="input-small" ng-model="value" placeholder="Enter Value" required ng-class="{error: converting.value.$invalid}">
+                        <select ng-model="currency" required ng-class="{error: converting.currency.$invalid}">
                             <option ng-repeat="currency in currencies" value="{{currency.ticker}}">
                                 {{currency.name}} ({{currency.ticker}})
                             </option>
                         </select>
-                        <button class="btn-primary btn" ng-click="convert()">Convert</button>
+                        <button class="btn-primary btn" ng-click="convert()" ng-disabled="converting.$invalid || loading">Convert</button>
+                        <input type="image" src="css/ajax-loader.gif" ng-show="loading">
+                        <div class="alert alert-info" ng-show="converting.$invalid">Enter numeric value and select source currency to convert.</div>
                     </form>
                 </div>
             </div>
