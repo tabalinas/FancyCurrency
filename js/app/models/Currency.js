@@ -1,6 +1,6 @@
 ﻿(function(app) {
     
-    app.models.Currency = function(attrs) {
+    var Currency = function(attrs) {
         angular.extend(this, {
             name: "",
             ticker: "",
@@ -9,7 +9,7 @@
         }, attrs);
     };
 
-    app.models.Currency.prototype = {
+    Currency.prototype = {
 
         formattedRate: function() {
             return this._formatNumber(this.rate);
@@ -22,6 +22,8 @@
         _formatNumber: function(number) {
             return number ? number.toFixed(2) : "-";
         }
-    }
+    };
+
+    app.models.Currency = Currency;
 
 })(app);
