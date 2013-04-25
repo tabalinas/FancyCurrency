@@ -2,10 +2,14 @@
 
     var CONVERT_SERVICE_URL = "https://rate-exchange.appspot.com/currency";
 
-    app.ctrls.CurrencyListCtrl = function($scope, $http) {
+    app.ctrls.CurrencyConvertCtrl = function($scope) {
         var chart;
 
-        $scope.currencies = app.db.Currencies;
+        $scope.currencies = [];
+
+        angular.forEach(app.db.Currencies, function(currency) {
+            $scope.currencies.push(new app.models.Currency(currency));
+        });
 
         $scope.loading = false;
 
@@ -105,8 +109,7 @@
                 sorting.asc = true;
             }
         };
-
-
+        
         chart = new Highcharts.Chart({
             chart: {
                 renderTo: "chart",
