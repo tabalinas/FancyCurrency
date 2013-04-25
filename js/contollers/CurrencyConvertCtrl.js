@@ -3,113 +3,104 @@
     var CONVERT_SERVICE_URL = "https://rate-exchange.appspot.com/currency";
 
     app.ctrls.CurrencyConvertCtrl = function($scope) {
-        var chart;
-
-        $scope.currencies = [];
+        var chart,
+            currencies = [];
 
         angular.forEach(app.db.Currencies, function(currency) {
-            $scope.currencies.push(new app.models.Currency(currency));
+            currencies.push(new app.models.Currency(currency));
         });
 
-        $scope.loading = false;
+        angular.extend($scope, {
 
-        $scope.convert = function() {
-            var self = this,
-                valueToConvert = self.value,
-                currencyTicker = self.currency,
-                promises = [];
+            currencies: currencies,
 
-            self.loading = true;
+            loading: false,
 
-            angular.forEach(self.currencies, function(currency) {
-                if(currency.ticker === currencyTicker) {
-                    currency.rate = 1;
-                    currency.value = parseFloat(valueToConvert);
-                    return;
-                }
+            convert: function() {
+                var self = this,
+                    valueToConvert = self.value,
+                    currencyTicker = self.currency,
+                    promises = [];
 
-                var promise = $.ajax({
-                    type: "GET",
-                    url: CONVERT_SERVICE_URL,
-                    dataType: "jsonp",
-                    data: {
-                        from: currencyTicker,
-                        to: currency.ticker,
-                        q: valueToConvert
+                self.loading = true;
+
+                angular.forEach(self.currencies, function(currency) {
+                    if(currency.ticker === currencyTicker) {
+                        currency.rate = 1;
+                        currency.value = parseFloat(valueToConvert);
+                        return;
                     }
-                }).done(function(data) {
-                    currency.rate = data.rate;
-                    currency.value = data.v;
+
+                    var promise = $.ajax({
+                        type: "GET",
+                        url: CONVERT_SERVICE_URL,
+                        dataType: "jsonp",
+                        data: {
+                            from: currencyTicker,
+                            to: currency.ticker,
+                            q: valueToConvert
+                        }
+                    }).done(function(data) {
+                        currency.rate = data.rate;
+                        currency.value = data.v;
+                    });
+
+                    promises.push(promise);
                 });
 
-                promises.push(promise);
-            });
+                $.when.apply(null, promises).done(function() {
+                    self.loading = false;
+                    self.setChartData();
+                    self.$apply();
+                });
+            },
 
-            $.when.apply(null, promises).done(function() {
-                self.loading = false;
-                self.setChartData();
-                self.$apply();
-            });
-        };
+            setChartData: function() {
+                var currencyTickers = [],
+                    values = [];
 
-        $scope.setChartData = function() {
-            var currencyTickers = [],
-                values = [];
+                angular.forEach(this.currencies, function(currency) {
+                    currencyTickers.push(currency.ticker);
+                    values.push(currency.value);
+                });
 
-            angular.forEach(this.currencies, function(currency) {
-                currencyTickers.push(currency.ticker);
-                values.push(currency.value);
-            });
+                chart.xAxis[0].setCategories(currencyTickers);
+                chart.series[0].setData(values);
+            },
 
-            chart.xAxis[0].setCategories(currencyTickers);
-            chart.series[0].setData(values);
-        };
+            columns: [
+                { field: "name", title: "Currency" },
+                { field: "ticker", title: "Ticker" },
+                { field: "rate", title: "Rate" },
+                { field: "value", title: "Converted" }
+            ],
 
-
-        $scope.columns = [
-            {
+            sorting: {
                 field: "name",
-                title: "Currency"
+                asc: true
             },
-            {
-                field: "ticker",
-                title: "Ticker"
+
+            columnClass: function(field) {
+                return this.sorting.field === field ? "sorted" : "";
             },
-            {
-                field: "rate",
-                title: "Rate"
+
+            columnSortingPrefix: function(field) {
+                if(this.sorting.field === field) {
+                    return this.sorting.asc ? "↑" : "↓";
+                }
             },
-            {
-                field: "value",
-                title: "Converted"
+
+            setSorting: function(field) {
+                var sorting = this.sorting;
+                if(sorting.field === field) {
+                    sorting.asc = !sorting.asc;
+                } else {
+                    sorting.field = field;
+                    sorting.asc = true;
+                }
             }
-        ];
+        });
 
-        $scope.sorting = {
-            field: "name",
-            asc: true
-        };
-
-        $scope.columnClass = function(field) {
-            return this.sorting.field === field ? "sorted" : "";
-        };
-
-        $scope.columnSortingPrefix = function(field) {
-            if(this.sorting.field === field) {
-                return this.sorting.asc ? "↑" : "↓";
-            }
-        };
-
-        $scope.setSorting = function(field) {
-            var sorting = this.sorting;
-            if(sorting.field === field) {
-                sorting.asc = !sorting.asc;
-            } else {
-                sorting.field = field;
-                sorting.asc = true;
-            }
-        };
-        
         chart = new Highcharts.Chart({
             chart: {
                 renderTo: "chart",
@@ -123,21 +114,21 @@
                 text: "Value in different currencies"
             },
             xAxis: {
-                title: {
-                    text: null
+                title: { 
+                    text: null 
                 }
             },
             yAxis: {
                 min: 0,
-                title: {
-                    text: null
+                title: { 
+                    text: null 
                 },
                 labels: {
                     overflow: "justify"
                 }
             },
-            legend: {
-                enabled: false
+            legend: { 
+                enabled: false 
             },
             plotOptions: {
                 bar: {
@@ -149,7 +140,9 @@
                     }
                 }
             },
-            credits: { enabled: false }
+            credits: { 
+                enabled: false 
+            }
         });
     };
 
